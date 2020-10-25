@@ -1,43 +1,24 @@
-﻿using MathNet.Numerics.LinearAlgebra.Double;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace Domain
 {
     public class Approximation
     {
-        public double[] Polyval(double[] x, double[] a)
+        private readonly double[] _factorCollection;
+
+        public Approximation(double[] factorCollection)
         {
-            var result = new List<double>();
-            for (int i = 0; i < x.Length; i++)
-            {
-                double sum = 0;
-                for (int j = 0; j < a.Length; j++)
-                    if (j > 1)
-                        sum += a[j] * Math.Pow(x[i], a.Length - j);
-                    else if (j == 1)
-                        sum += a[j] * x[i];
-                    else
-                        sum += a[j];
-                result.Add(sum);
-            }
-            return result.ToArray();
+            _factorCollection = factorCollection;
         }
 
-        public static double[] Polyfit(double[] x, double[] y, int degree)
+        public double ComputeResultFor(double x)
         {
-            // Vandermonde matrix
-            var v = new DenseMatrix(x.Length, degree + 1);
-            for (int i = 0; i < v.RowCount; i++)
-                for (int j = 0; j <= degree; j++) v[i, j] = Math.Pow(x[i], j);
-            var yv = new DenseVector(y).ToColumnMatrix();
-            var qr = v.QR();
-            // Math.Net doesn't have an "economy" QR, so:
-            // cut R short to square upper triangle, then recompute Q
-            var r = qr.R.SubMatrix(0, degree + 1, 0, degree + 1);
-            var q = v.Multiply(r.Inverse());
-            var p = r.Inverse().Multiply(q.TransposeThisAndMultiply(yv));
-            return p.Column(0).ToArray();
+            // Compute the polynomial result for x
+            // W(x)= a[0]*x^n-1 + x[1]*x^n-2 + ... + a[n-2]*x + a[n-1]
+            double sum = _factorCollection[_factorCollection.Length - 2] * x + _factorCollection[_factorCollection.Length - 1];
+            for (int i = 0; i < _factorCollection.Length - 2; i++)
+                sum += _factorCollection[i] * Math.Pow(x, _factorCollection.Length - i - 1);
+            return sum;
         }
     }
 }

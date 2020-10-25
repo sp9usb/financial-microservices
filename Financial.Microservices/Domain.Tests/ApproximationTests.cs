@@ -1,17 +1,29 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 
 namespace Domain.Tests
 {
     public class ApproximationTests
     {
-        //var x = Enumerable.Range(1, 100).Select(z => z * 1.0).ToArray();
-        //var y = x;
+        [TestCase(new double[] { 7, 6 }, -10, -64)]
+        [TestCase(new double[] { 7, 6 }, 0, 6)]
+        [TestCase(new double[] { 7, 6 }, 10, 76)]
+        [TestCase(new double[] { 3, 7, 6 }, -10, 236)]
+        [TestCase(new double[] { 3, 7, 6 }, 0, 6)]
+        [TestCase(new double[] { 3, 7, 6 }, 10, 376)]
+        [TestCase(new double[] { 4, 3, 7, 6 }, -10, -3764)]
+        [TestCase(new double[] { 4, 3, 7, 6 }, 0, 6)]
+        [TestCase(new double[] { 4, 3, 7, 6 }, 10, 4376)]
+        [TestCase(new double[] { 5, 4, 3, 7, 6 }, -10, 46236)]
+        [TestCase(new double[] { 5, 4, 3, 7, 6 }, 0, 6)]
+        [TestCase(new double[] { 5, 4, 3, 7, 6 }, 10, 54376)]
+        public void ComputeResultFor_WhenAllArgumentsAreProper(double[] factors, double x, int expectedResult)
+        {
+            var approximation = new Approximation(factors);
 
-        //var res = Polyfit(x, y, 3);
+            var result = approximation.ComputeResultFor(x);
 
-        //// f(x)=ax^2+bx+c for polyfit(x,y, 2)
-        //// f(x)=ax^3+bx^2+cx+d for polyfit(x,y,3)
-
-        //var yp = Polyval(x, res);
+            Assert.That((int)result, Is.EqualTo(expectedResult));
+        }
     }
 }
