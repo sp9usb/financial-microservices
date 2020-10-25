@@ -19,13 +19,13 @@ jobs:
         dotnet-version: '3.1.x'
     - name: Install dependencies
       run: |
-        cd Finantial.Microservices
+        cd Financial.Microservices
         dotnet restore
     - name: Build
       run: |
-        cd Finantial.Microservices
+        cd Financial.Microservices
         dotnet build --configuration Release --no-restore
     - name: Test
       run: |
-        cd Finantial.Microservices
+        cd Financial.Microservices
         dotnet test --no-restore --verbosity normal
