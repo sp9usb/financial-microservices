@@ -2,7 +2,7 @@
 {
     public class Line
     {
-        public double A { get; } = 1;
+        public double A { get; }
         public double B { get; }
 
         public Line(double a, double b)
